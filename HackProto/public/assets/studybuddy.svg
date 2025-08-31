@@ -1,0 +1,17 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="40" cy="40" r="40" fill="url(#gradient)"/>
+  <path d="M20 35h40v25c0 2.76-2.24 5-5 5H25c-2.76 0-5-2.24-5-5V35z" fill="white"/>
+  <path d="M25 30h30v8H25v-8z" fill="white"/>
+  <circle cx="30" cy="25" r="3" fill="white"/>
+  <circle cx="50" cy="25" r="3" fill="white"/>
+  <path d="M32 45h16v2H32v-2z" fill="#4f46e5"/>
+  <path d="M32 50h12v2H32v-2z" fill="#4f46e5"/>
+  <path d="M32 55h20v2H32v-2z" fill="#4f46e5"/>
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#7c3aed;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>

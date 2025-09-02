@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import studyBuddyLogo from '../assets/studybuddy.png';
 import './HomePage.css';
+import { getUsers } from '../services/HomePage';
 
 const HomePage = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
@@ -20,6 +21,12 @@ const HomePage = ({ onNavigate }) => {
     }));
   };
 
+  // Configurable corner button function
+  const handleCornerButtonClick = () => {
+    getUsers();
+    console.log('Corner button action triggered');
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Send to Supabase later
@@ -29,6 +36,15 @@ const HomePage = ({ onNavigate }) => {
 
   return (
     <div className="home-page">
+      {/* Configurable Corner Button */}
+      <button 
+        className="corner-button" 
+        onClick={handleCornerButtonClick}
+        title="Click to configure action"
+      >
+        ⚙️
+      </button>
+      
       <div className="home-container">
         {/* Header Section */}
         <header className="home-header">

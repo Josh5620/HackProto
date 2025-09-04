@@ -65,7 +65,7 @@ class Student {
         - a compatibility score (0–100 as integer),
         - and a one-sentence explanation of why they are compatible.
 
-        Important: Respond ONLY in strict JSON format, no text outside JSON.
+        Important: Respond ONLY in strict JSON format, no text outside JSON.  
 
         Example response:
         {
@@ -93,4 +93,27 @@ class Student {
   }
 }
 
-export { getUsers, Student };
+async function signUp(newStudent) {
+  const { data, error } = await supabaseClient
+    .from("users")
+    .insert({
+      full_name: newStudent.full_name,
+      subjects: newStudent.subjects,         // e.g. ["Math", "English"]
+      availability: newStudent.availability, // e.g. ["Saturday", "Sunday"]
+      preferred_lang: newStudent.preferred_lang,
+      school: newStudent.school,
+      special: newStudent.special ?? null
+    })
+    .select()
+    .single(); // since you're inserting one row
+
+  if (error) {
+    console.error("Sign up failed:", error);
+    return { ok: false, error };
+  }
+
+  console.log("Inserted new user: ", data);
+  return { ok: true, data };
+}
+
+export { getUsers, Student, signUp };

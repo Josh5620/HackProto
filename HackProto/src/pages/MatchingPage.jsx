@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "./MatchingPage.css";
 import UserCard from "./UserCard";
 import { getUsers, Student} from "../services/BackStuff";
 
-const MatchingPage = ({ onNavigate }) => {
-  // Current user data
-  const [currentUser] = useState(
-    new Student(0, "Alex Johnson", "Mathematics", "Sat, Sun", "English", "Riverside High School",  "Looking for a study partner to help with calculus and algebra!")
+const MatchingPage = ({ onNavigate, currentUser }) => {
+  // Use the passed currentUser or create a default one if none exists
+  const [user] = useState(
+    currentUser || new Student(0, "Alex Johnson", ["Mathematics"], ["Saturday", "Sunday"], "English", "Riverside High School", "Looking for a study partner to help with calculus and algebra!")
   );
 
   const [otherUsers, setOtherUsers] = useState([]);
@@ -17,30 +17,34 @@ const MatchingPage = ({ onNavigate }) => {
 
   useEffect(() => { 
     console.log("Reload");
-    fetchUsers();
-  }, []);
+    if (user && user.id) {
+      fetchUsers();
+    }
+  }, [user, fetchUsers]);
 
-  async function fetchUsers() {
+  const fetchUsers = useCallback(async () => {
     setIsLoading(true);
     try {
       const users = await getUsers();
-      const fetchedUsers = users.map(user => new Student(user.id, user.full_name, user.subjects, user.availability, user.preferred_lang, user.school, user.special, user.created_by));
-      console.log(fetchedUsers);
+      const fetchedUsers = users
+        .filter(userData => userData.id !== user.id) // Filter out current user
+        .map(userData => new Student(userData.id, userData.full_name, userData.subjects, userData.availability, userData.preferred_lang, userData.school, userData.special, userData.created_by));
+      console.log("Fetched users (excluding current user):", fetchedUsers);
       setOtherUsers(fetchedUsers);
     } catch (error) {
       console.error('Error fetching users:', error);
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [user.id]);
 
   // Connect to gemini api to find best match later
   const findBestMatch = async () => {
-    console.log("Finding best match for:", currentUser);
+    console.log("Finding best match for:", user);
     setIsLoading(true);
     
     try {
-      const matches = await currentUser.getMatch(otherUsers);
+      const matches = await user.getMatch(otherUsers);
       console.log(matches);
       
       // Store the match results
@@ -56,7 +60,7 @@ const MatchingPage = ({ onNavigate }) => {
   // Navigate to matched users page with the results
   const viewDetailedMatches = () => {
     onNavigate("matched-users", {
-      currentUser: currentUser,
+      currentUser: user,
       matchResults: matchResults
     });
   };
@@ -77,7 +81,7 @@ const MatchingPage = ({ onNavigate }) => {
         {/* Current User Section */}
         <div className="current-user-section">
           <h3>Your Profile</h3>
-          <UserCard user={currentUser} />
+          <UserCard user={user} />
 
           <button className="auto-match-btn" onClick={findBestMatch} disabled={isLoading}>
             {isLoading ? 'Finding Matches...' : 'Find Buddy'}

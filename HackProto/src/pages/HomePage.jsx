@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import studyBuddyLogo from '../assets/studybuddy.png';
 import './HomePage.css';
-import { getUsers } from '../services/HomePage';
+import { getUsers } from '../services/BackStuff';
 
 const HomePage = ({ onNavigate }) => {
   const [formData, setFormData] = useState({

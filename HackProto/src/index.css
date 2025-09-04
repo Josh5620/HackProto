@@ -3,6 +3,23 @@
   line-height: 1.5;
   font-weight: 400;
   
+  /* New Color Palette */
+  --color-primary-light: #E0E2DB;    /* Alabaster */
+  --color-primary-medium: #D2D4C8;   /* Timberwolf */
+  --color-primary-dark: #B8BDB5;     /* Ash gray */
+  --color-accent-medium: #889696;    /* Cadet gray */
+  --color-accent-dark: #5F7470;      /* Hooker's green */
+  
+  /* Semantic color mappings */
+  --background-primary: var(--color-primary-light);
+  --background-secondary: var(--color-primary-medium);
+  --background-card: white;
+  --text-primary: var(--color-accent-dark);
+  --text-secondary: var(--color-accent-medium);
+  --text-muted: var(--color-primary-dark);
+  --accent-primary: var(--color-accent-medium);
+  --accent-secondary: var(--color-primary-dark);
+  
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,8 +35,8 @@ body {
   padding: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #f8fafc;
-  color: #334155;
+  background-color: var(--background-primary);
+  color: var(--text-primary);
 }
 
 #root {

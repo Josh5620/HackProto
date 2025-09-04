@@ -1,93 +1,68 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./MatchingPage.css";
 import UserCard from "./UserCard";
+import { getUsers, Student} from "../services/BackStuff";
 
 const MatchingPage = ({ onNavigate }) => {
   // Current user data
-  const [currentUser] = useState({
-    id: 0,
-    name: "Alex Johnson",
-    age: 18,
-    school: "Riverside High School",
-    subject: "Mathematics",
-    bio: "Looking for a study partner to help with calculus and algebra!",
-  });
+  const [currentUser] = useState(
+    new Student(0, "Alex Johnson", "Mathematics", "Sat, Sun", "English", "Riverside High School",  "Looking for a study partner to help with calculus and algebra!")
+  );
 
-  // Pull from supabase to get other users
-  const [otherUsers] = useState([
-    {
-      id: 1,
-      name: "Sarah Chen",
-      age: 17,
-      school: "Oakwood Academy",
-      subject: "Mathematics",
-      bio: "Love solving complex problems! Great with geometry and statistics.",
-    },
-    {
-      id: 2,
-      name: "Marcus Williams",
-      age: 18,
-      school: "Riverside High School",
-      subject: "Science",
-      bio: "Physics enthusiast who also enjoys math. Happy to help with both!",
-    },
-    {
-      id: 3,
-      name: "Emma Davis",
-      age: 17,
-      school: "Central High",
-      subject: "English",
-      bio: "Strong in writing and literature. Looking for cross-subject collaboration.",
-    },
-    {
-      id: 4,
-      name: "James Rodriguez",
-      age: 19,
-      school: "Riverside High School",
-      subject: "Mathematics",
-      bio: "Calculus tutor with 2 years experience. Patient and friendly!",
-    },
-  ]);
+  const [otherUsers, setOtherUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [matchResults, setMatchResults] = useState(null);
+  const [showMatches, setShowMatches] = useState(false);
+  
 
-  const [matchedUser, setMatchedUser] = useState(null);
+  useEffect(() => { 
+    console.log("Reload");
+    fetchUsers();
+  }, []);
+
+  async function fetchUsers() {
+    setIsLoading(true);
+    try {
+      const users = await getUsers();
+      const fetchedUsers = users.map(user => new Student(user.id, user.full_name, user.subjects, user.availability, user.preferred_lang, user.school, user.special, user.created_by));
+      console.log(fetchedUsers);
+      setOtherUsers(fetchedUsers);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   // Connect to gemini api to find best match later
-  const findBestMatch = () => {
-    let bestMatch = null;
-    let highestScore = 0;
-
-    otherUsers.forEach((user) => {
-      let score = 0;
-
-      // Same subject gets highest priority
-      if (user.subject === currentUser.subject) {
-        score += 40;
-      }
-
-      // Same school gets bonus points
-      if (user.school === currentUser.school) {
-        score += 30;
-      }
-
-      // Similar age gets bonus points
-      const ageDiff = Math.abs(user.age - currentUser.age);
-      if (ageDiff <= 1) {
-        score += 20;
-      } else if (ageDiff <= 2) {
-        score += 10;
-      }
-
-      // Random factor for variety
-      score += Math.random() * 10;
-
-      if (score > highestScore) {
-        highestScore = score;
-        bestMatch = { user, score: Math.round(score) };
-      }
-    });
-
-    setMatchedUser(bestMatch);
+  const findBestMatch = async () => {
+    console.log("Finding best match for:", currentUser);
+    setIsLoading(true);
+    
+    try {
+      const matches = await currentUser.getMatch(otherUsers);
+      console.log(matches);
+      
+      // Store the match results
+      setMatchResults(matches);
+      setShowMatches(true);
+    } catch (error) {
+      console.error('Error finding matches:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  // Navigate to matched users page with the results
+  const viewDetailedMatches = () => {
+    onNavigate("matched-users", {
+      currentUser: currentUser,
+      matchResults: matchResults
+    });
+  };
+
+
+
 
   return (
     <div className="matching-page">
@@ -104,21 +79,37 @@ const MatchingPage = ({ onNavigate }) => {
           <h3>Your Profile</h3>
           <UserCard user={currentUser} />
 
-          <button className="auto-match-btn" onClick={findBestMatch}>
-            Find My Best Match
+          <button className="auto-match-btn" onClick={findBestMatch} disabled={isLoading}>
+            {isLoading ? 'Finding Matches...' : 'Find Buddy'}
           </button>
 
-          {matchedUser && (
-            <div className="match-result">
-              <h4>🎉 Your Best Match!</h4>
-              <p>
-                <strong>Match Score:</strong> {matchedUser.score}%
-              </p>
-              <UserCard 
-                user={matchedUser.user} 
-                isMatched={true} 
-                showConnectButton={true} 
-              />
+          <button className="auto-match-btn" onClick={fetchUsers} disabled={isLoading}>
+            {isLoading ? 'Loading...' : 'Refresh Study Partners'}
+          </button>
+
+          {/* Show matches summary when available */}
+          {showMatches && matchResults && matchResults.length > 0 && (
+            <div className="matches-preview">
+              <h4>🎉 Found {matchResults.length} Great Matches!</h4>
+              <div className="matches-summary">
+                {matchResults.map((match, index) => (
+                  <div key={match.id} className="match-summary-item">
+                    <span className="match-rank">#{index + 1}</span>
+                    <span className="match-name">{match.name}</span>
+                    <span className="match-score">{match.score}%</span>
+                  </div>
+                ))}
+              </div>
+              <button className="view-matches-btn" onClick={viewDetailedMatches}>
+                View Detailed Matches
+              </button>
+            </div>
+          )}
+
+          {showMatches && (!matchResults || matchResults.length === 0) && (
+            <div className="no-matches-preview">
+              <h4>No matches found</h4>
+              <p>Try refreshing the study partners or adjusting your preferences.</p>
             </div>
           )}
         </div>
@@ -127,9 +118,15 @@ const MatchingPage = ({ onNavigate }) => {
         <div className="other-users-section">
           <h3>Available Study Partners</h3>
           <div className="users-list">
-            {otherUsers.map((user) => (
-              <UserCard key={user.id} user={user} />
-            ))}
+            {otherUsers.length === 0 ? (
+              <div className="no-users-message">
+                No study partners loaded yet. Click "Refresh Study Partners" to see available users.
+              </div>
+            ) : (
+              otherUsers.map((user) => (
+                <UserCard key={user.id} user={user} />
+              ))
+            )}
           </div>
         </div>
       </div>

@@ -7,7 +7,6 @@ import './App.css'
 function App() {
   const [currentPage, setCurrentPage] = useState('home')
   const [navigationData, setNavigationData] = useState({})
-  const [currentUser, setCurrentUser] = useState(null)
 
   const handleNavigate = (page, data = {}) => {
     setCurrentPage(page)
@@ -17,16 +16,16 @@ function App() {
   const renderCurrentPage = () => {
     switch (currentPage) {
       case 'home':
-        return <HomePage onNavigate={handleNavigate} setCurrentUser={setCurrentUser} />
+        return <HomePage onNavigate={handleNavigate} />
       case 'matching':
-        return <MatchingPage onNavigate={handleNavigate} currentUser={currentUser} />
+        return <MatchingPage onNavigate={handleNavigate} />
       case 'matched-users':
         return <MatchedUsersPage 
           onNavigate={handleNavigate} 
           navigationData={navigationData}
         />
       default:
-        return <HomePage onNavigate={handleNavigate} setCurrentUser={setCurrentUser} />
+        return <HomePage onNavigate={handleNavigate} />
     }
   }
 

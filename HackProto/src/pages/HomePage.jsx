@@ -3,7 +3,7 @@ import studyBuddyLogo from '../assets/studybuddy.png';
 import './HomePage.css';
 import { getUsers, signUp, Student } from '../services/BackStuff';
 
-const HomePage = ({ onNavigate, setCurrentUser }) => {
+const HomePage = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
     full_name: '',
     subjects: [],
@@ -58,21 +58,6 @@ const HomePage = ({ onNavigate, setCurrentUser }) => {
       const result = await signUp(newStudent);
       
       if (result.ok) {
-        // Create Student object with the returned data
-        const currentUserData = result.data;
-        const currentUser = new Student(
-          currentUserData.id,
-          currentUserData.full_name,
-          currentUserData.subjects,
-          currentUserData.availability,
-          currentUserData.preferred_lang,
-          currentUserData.school,
-          currentUserData.special,
-          currentUserData.created_by
-        );
-        
-        // Pass the current user to parent and navigate to matching
-        setCurrentUser(currentUser);
         alert('Account created successfully! Let\'s find your study partner.');
         onNavigate('matching');
       } else {

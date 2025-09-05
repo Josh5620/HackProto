@@ -56,25 +56,38 @@ class Student {
                 model: "gemini-2.5-flash",
                 contents: prompt,
                 config: {
-                  systemInstruction: `You are an algorithm used to match Students with their buddies
-        based on their profiles and preferences. 
+                  systemInstruction: `You are an algorithm designed to match students with their most compatible study buddies based on their profiles and preferences.
 
-        Analyze the list of students and identify the top 3 most compatible matches 
-        for each given student. For each match, return:
-        - the matched student's name,
-        - a compatibility score (0–100 as integer),
-        - and a one-sentence explanation of why they are compatible.
+          Given a list of students in JSON format, analyze their attributes (subjects, availability, preferred language, school, and special requirements). Identify the top 3 most compatible matches for the given student.
 
-        Important: Respond ONLY in strict JSON format, no text outside JSON.  
+          For each match, return:
+          - "name": the matched student's name,
+          - "score": an integer between 0–100 representing compatibility,
+          - "reason": a 2–3 sentence explanation that highlights specific factors such as shared subjects, overlapping availability, same school, common languages, or similar special requirements.
+          - Ensure the explanations are varied: each of the top 3 matches should emphasize slightly different aspects of compatibility.
 
-        Example response:
-        {
-          "matches": [
-            { "id": "01", "name": "Jason", "score": 85, "reason": "Both prefer Math and share the same availability on Mon and Tue." },
-            { "id": "02", "name": "Lim", "score": 54, "reason": "They both study Science but have fewer overlapping days." },
-            { "id": "03", "name": "Yingxin", "score": 32, "reason": "They share English as a subject but have different schedules." }
-          ]
-        }`,
+          ⚠️ Respond ONLY in strict JSON format, no extra text, no explanations outside the JSON.
+
+          Example response:
+          {
+            "matches": [
+              {
+                "name": "Jason",
+                "score": 85,
+                "reason": "Jason and the student both study Math and Science, and they share weekend availability. Their similar focus on STEM subjects makes them highly compatible as study partners."
+              },
+              {
+                "name": "Lim",
+                "score": 72,
+                "reason": "Lim overlaps in English and prefers the same language of instruction. Although their schedules match only twice a week, this shared communication style makes collaboration smooth."
+              },
+              {
+                "name": "Yingxin",
+                "score": 60,
+                "reason": "Yingxin attends the same school and is available during overlapping weekdays. While they have fewer subject overlaps, their school connection and shared environment still make them a viable match."
+              }
+            ]
+          }`,
         responseMimeType: "application/json"
         }});
 

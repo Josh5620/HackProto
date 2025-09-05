@@ -114,7 +114,7 @@ const HomePage = ({ onNavigate }) => {
             <div className="form-group">
               <label>Subjects (Select all that apply)</label>
               <div className="checkbox-group">
-                {['Mathematics', 'Science', 'English', 'History'].map(subject => (
+                {['Maths', 'IT', 'English', 'Psychology', 'Coding', 'Science'].map(subject => (
                   <label key={subject} className="checkbox-label">
                     <input
                       type="checkbox"

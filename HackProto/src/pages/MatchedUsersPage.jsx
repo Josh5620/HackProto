@@ -12,7 +12,10 @@ const MatchedUsersPage = ({ onNavigate, navigationData }) => {
   const matchResults = navigationData?.matchResults;
 
   const fetchUsersAndMatch = useCallback(async () => {
+    console.log('MatchedUsersPage - matchResults:', matchResults);
+    
     if (!matchResults || !Array.isArray(matchResults)) {
+      console.log('No match results or not an array');
       setIsLoading(false);
       return;
     }
@@ -21,6 +24,8 @@ const MatchedUsersPage = ({ onNavigate, navigationData }) => {
       setIsLoading(true);
       // Fetch all users from database
       const users = await getUsers();
+      console.log('Fetched users:', users);
+      
       const fetchedUsers = users.map(user => new Student(
         user.id, 
         user.full_name, 
@@ -31,10 +36,13 @@ const MatchedUsersPage = ({ onNavigate, navigationData }) => {
         user.special, 
         user.created_by
       ));
+      console.log('Mapped fetchedUsers:', fetchedUsers);
 
       // Match the IDs from Gemini response with actual user data
       const matched = matchResults.map(match => {
+        console.log('Processing match:', match);
         const user = fetchedUsers.find(u => u.id === match.id);
+        console.log('Found user for match:', user);
         return {
           user: user,
           score: match.score,
@@ -43,6 +51,7 @@ const MatchedUsersPage = ({ onNavigate, navigationData }) => {
         };
       }).filter(match => match.user !== undefined); // Only keep matches where we found the user
 
+      console.log('Final matched users:', matched);
       setMatchedUsers(matched);
     } catch (error) {
       console.error('Error fetching matched users:', error);

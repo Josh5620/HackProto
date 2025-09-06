@@ -25,7 +25,7 @@ const MatchingPage = ({ onNavigate }) => {
     try {
       const users = await getUsers();
       const fetchedUsers = users.map(user => new Student(user.id, user.full_name, user.subjects, user.availability, user.preferred_lang, user.school, user.special, user.created_by));
-      console.log(fetchedUsers);
+      
       setOtherUsers(fetchedUsers);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -93,7 +93,7 @@ const MatchingPage = ({ onNavigate }) => {
               <h4>🎉 Found {matchResults.length} Great Matches!</h4>
               <div className="matches-summary">
                 {matchResults.map((match, index) => (
-                  <div key={match.id} className="match-summary-item">
+                  <div key={index} className="match-summary-item">
                     <span className="match-rank">#{index + 1}</span>
                     <span className="match-name">{match.name}</span>
                     <span className="match-score">{match.score}%</span>

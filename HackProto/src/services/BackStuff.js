@@ -9,7 +9,6 @@ async function getUsers() {
   const { data, error } = await supabaseClient.from("users").select("*");
 
   if (error) console.error(error);
-  else console.log(data);
   return data;
 }
 
@@ -61,6 +60,7 @@ class Student {
           Given a list of students in JSON format, analyze their attributes (subjects, availability, preferred language, school, and special requirements). Identify the top 3 most compatible matches for the given student.
 
           For each match, return:
+          - "id": the matched student's ID,
           - "name": the matched student's name,
           - "score": an integer between 0–100 representing compatibility,
           - "reason": a 2–3 sentence explanation that highlights specific factors such as shared subjects, overlapping availability, same school, common languages, or similar special requirements.
@@ -72,16 +72,19 @@ class Student {
           {
             "matches": [
               {
+                "id": 1,
                 "name": "Jason",
                 "score": 85,
                 "reason": "Jason and the student both study Math and Science, and they share weekend availability. Their similar focus on STEM subjects makes them highly compatible as study partners."
               },
               {
+                "id": 2,
                 "name": "Lim",
                 "score": 72,
                 "reason": "Lim overlaps in English and prefers the same language of instruction. Although their schedules match only twice a week, this shared communication style makes collaboration smooth."
               },
               {
+                "id": 3,
                 "name": "Yingxin",
                 "score": 60,
                 "reason": "Yingxin attends the same school and is available during overlapping weekdays. While they have fewer subject overlaps, their school connection and shared environment still make them a viable match."

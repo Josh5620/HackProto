@@ -6,7 +6,7 @@ import { getUsers, Student} from "../services/BackStuff";
 const MatchingPage = ({ onNavigate }) => {
   // Current user data
   const [currentUser] = useState(
-    new Student(0, "Alex Johnson", "Mathematics", "Sat, Sun", "English", "Riverside High School",  "Looking for a study partner to help with calculus and algebra!")
+    new Student(0, "Alex", "Mathematics", "Sat, Sun", "English", "Riverside High School",  "")
   );
 
   const [otherUsers, setOtherUsers] = useState([]);

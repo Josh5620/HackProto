@@ -33,7 +33,7 @@ const HomePage = ({ onNavigate }) => {
     }
   };
 
-  // Configurable corner button function
+
   const handleCornerButtonClick = () => {
     getUsers();
     console.log('Corner button action triggered');
@@ -44,7 +44,7 @@ const HomePage = ({ onNavigate }) => {
     setIsSubmitting(true);
     
     try {
-      // Create new student object for signup
+
       const newStudent = {
         full_name: formData.full_name,
         subjects: formData.subjects,

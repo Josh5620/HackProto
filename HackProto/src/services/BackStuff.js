@@ -48,7 +48,7 @@ class Student {
         - School: ${this.school}
         - Special Requirements: ${this.special}
 
-        Please match me with the most compatible student(s) for effective studying together.`;
+        Please match me with the most compatible student(s) for effective studying together. Do not match me with myself.`;
 
             try {
               const result = await ai.models.generateContent({
@@ -66,7 +66,7 @@ class Student {
           - "reason": a 2–3 sentence explanation that highlights specific factors such as shared subjects, overlapping availability, same school, common languages, or similar special requirements.
           - Ensure the explanations are varied: each of the top 3 matches should emphasize slightly different aspects of compatibility.
 
-          ⚠️ Respond ONLY in strict JSON format, no extra text, no explanations outside the JSON.
+          ⚠️ Respond ONLY in strict JSON format, no extra text, no explanations outside the JSON. Ensure prompted student name is not included in the matches.                                                                                     
 
           Example response:
           {

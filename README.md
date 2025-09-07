@@ -1,3 +1,12 @@
+# Hackathon Submission Preface
+
+- Event: Codenection Hackathon (Student Lifestyle Track)
+- Team: CodeFusionX
+- Problem Statement: "Tutoring for Students"
+- Submission Title: StudyBuddy
+
+---
+
 # HackProto (StudyBuddy Matching Prototype)
 
 StudyBuddy HackProto is a working prototype that:
